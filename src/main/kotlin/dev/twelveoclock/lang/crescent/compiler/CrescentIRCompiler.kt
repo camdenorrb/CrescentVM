@@ -5,8 +5,8 @@ import dev.twelveoclock.lang.crescent.language.ast.CrescentAST
 import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.*
 import dev.twelveoclock.lang.crescent.language.ir.CrescentIR
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
-import dev.twelveoclock.lang.crescent.parsers.CrescentParser
+import dev.twelveoclock.lang.crescent.lexers.Lexer
+import dev.twelveoclock.lang.crescent.parsers.Parser
 import dev.twelveoclock.lang.crescent.project.extensions.minimize
 import dev.twelveoclock.lang.crescent.vm.CrescentIRVM
 import kotlin.io.path.Path
@@ -33,7 +33,7 @@ object CrescentIRCompiler {
 				}
 			""".trimIndent()
 
-		val crescentIR = invoke(CrescentParser.invoke(Path("meow.crescent"), CrescentLexer.invoke(code)))
+		val crescentIR = invoke(Parser.invoke(Path("meow.crescent"), Lexer.invoke(code)))
 		crescentIR.commands.forEach { println(it) }
 		println()
 		CrescentIRVM(crescentIR).invoke()

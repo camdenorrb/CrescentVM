@@ -1,8 +1,8 @@
 package dev.twelveoclock.lang.crescent
 
 import dev.twelveoclock.lang.crescent.compiler.CrescentIRCompiler
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
-import dev.twelveoclock.lang.crescent.parsers.CrescentParser
+import dev.twelveoclock.lang.crescent.lexers.Lexer
+import dev.twelveoclock.lang.crescent.parsers.Parser
 import dev.twelveoclock.lang.crescent.vm.CrescentIRVM
 import dev.twelveoclock.lang.crescent.vm.CrescentVM
 import kotlin.io.path.Path
@@ -44,9 +44,9 @@ object Main {
             """.trimIndent()
 
 		println("Here")
-		val tokens = CrescentLexer.invoke(code)
+		val tokens = Lexer.invoke(code)
 		println(tokens)
-		val file = CrescentParser.invoke(Path(""), tokens)
+		val file = Parser.invoke(Path(""), tokens)
 		println(file.mainFunction?.innerCode)
 		CrescentVM(listOf(file), file).invoke()
 	}
@@ -82,9 +82,9 @@ object Main {
             """.trimIndent()
 
 		println("Here")
-		val tokens = CrescentLexer.invoke(code)
+		val tokens = Lexer.invoke(code)
 		println(tokens)
-		val file = CrescentParser.invoke(Path(""), tokens)
+		val file = Parser.invoke(Path(""), tokens)
 		println(file.mainFunction?.innerCode)
 		CrescentVM(listOf(file), file).invoke()
 	}
@@ -104,7 +104,7 @@ object Main {
                 }
             """.trimIndent()
 
-		val file = CrescentParser.invoke(Path(""), CrescentLexer.invoke(code))
+		val file = Parser.invoke(Path(""), Lexer.invoke(code))
 		CrescentIRVM(CrescentIRCompiler.invoke(file).also { println(it) }).invoke()
 	}
 }

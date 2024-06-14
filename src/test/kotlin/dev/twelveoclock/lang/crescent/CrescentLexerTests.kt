@@ -6,7 +6,7 @@ import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Operator.*
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Statement.*
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Type.*
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Variable.*
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
+import dev.twelveoclock.lang.crescent.lexers.Lexer
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
@@ -15,14 +15,14 @@ internal class CrescentLexerTests {
     @Test
     fun helloWorld() {
 
-        val tokens = CrescentLexer.invoke(TestCode.helloWorlds)
+        val tokens = Lexer.invoke(TestCode.helloWorlds)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("Hello World"), Parenthesis.CLOSE,
-                Key("println"), *Array(2) { Parenthesis.OPEN }, Data.String("Hello World"), *Array(2) { Parenthesis.CLOSE },
-                Key("println"), *Array(10) { Parenthesis.OPEN }, Data.String("Hello World"), *Array(10) { Parenthesis.CLOSE },
+                FUN, Identifier("main"), Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello World"), Parenthesis.CLOSE,
+                Identifier("println"), *Array(2) { Parenthesis.OPEN }, Data.String("Hello World"), *Array(2) { Parenthesis.CLOSE },
+                Identifier("println"), *Array(10) { Parenthesis.OPEN }, Data.String("Hello World"), *Array(10) { Parenthesis.CLOSE },
                 Bracket.CLOSE,
             ),
             tokens
@@ -44,33 +44,33 @@ internal class CrescentLexerTests {
     @Test
     fun ifStatement() {
 
-        val tokens = CrescentLexer.invoke(TestCode.ifStatement)
+        val tokens = Lexer.invoke(TestCode.ifStatement)
 
         assertContentEquals(
             listOf(
 
-                FUN, Key("test1"), Parenthesis.OPEN, Key("args"), TYPE_PREFIX, SquareBracket.OPEN, Key("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, Bracket.OPEN,
-                IF, Parenthesis.OPEN, Key("args"), SquareBracket.OPEN, Data.Number(0.toByte()), SquareBracket.CLOSE, EQUALS_COMPARE, Data.String("true"), Parenthesis.CLOSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE,
+                FUN, Identifier("test1"), Parenthesis.OPEN, Identifier("args"), TYPE_PREFIX, SquareBracket.OPEN, Identifier("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, Bracket.OPEN,
+                IF, Parenthesis.OPEN, Identifier("args"), SquareBracket.OPEN, Data.Number(0.toByte()), SquareBracket.CLOSE, EQUALS_COMPARE, Data.String("true"), Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 ELSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("Hiss"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hiss"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 Bracket.CLOSE,
 
-                FUN, Key("test2"), Parenthesis.OPEN, Key("args"), TYPE_PREFIX, SquareBracket.OPEN, Key("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, RETURN, Key("String"), Bracket.OPEN,
-                IF, Parenthesis.OPEN, Key("args"), SquareBracket.OPEN, Data.Number(0.toByte()), SquareBracket.CLOSE, EQUALS_COMPARE, Data.String("true"), Parenthesis.CLOSE, Bracket.OPEN,
+                FUN, Identifier("test2"), Parenthesis.OPEN, Identifier("args"), TYPE_PREFIX, SquareBracket.OPEN, Identifier("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, RETURN, Identifier("String"), Bracket.OPEN,
+                IF, Parenthesis.OPEN, Identifier("args"), SquareBracket.OPEN, Data.Number(0.toByte()), SquareBracket.CLOSE, EQUALS_COMPARE, Data.String("true"), Parenthesis.CLOSE, Bracket.OPEN,
                 RETURN, Data.String("Meow"),
                 Bracket.CLOSE,
                 ELSE, Bracket.OPEN,
                 RETURN, Data.String("Hiss"),
                 Bracket.CLOSE,
-                Key("println"), Parenthesis.OPEN, Data.String("This shouldn't be printed"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("This shouldn't be printed"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
 
-                FUN, Key("main"), Parenthesis.OPEN, Key("args"), TYPE_PREFIX, SquareBracket.OPEN, Key("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, Bracket.OPEN,
-                Key("test1"), Parenthesis.OPEN, Key("args"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("test2"), Parenthesis.OPEN, Key("args"), Parenthesis.CLOSE, Parenthesis.CLOSE,
+                FUN, Identifier("main"), Parenthesis.OPEN, Identifier("args"), TYPE_PREFIX, SquareBracket.OPEN, Identifier("String"), SquareBracket.CLOSE, Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("test1"), Parenthesis.OPEN, Identifier("args"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("test2"), Parenthesis.OPEN, Identifier("args"), Parenthesis.CLOSE, Parenthesis.CLOSE,
                 Bracket.CLOSE
             ),
             tokens
@@ -80,17 +80,17 @@ internal class CrescentLexerTests {
     @Test
     fun ifInputStatement() {
 
-        val tokens = CrescentLexer.invoke(TestCode.ifInputStatement)
+        val tokens = Lexer.invoke(TestCode.ifInputStatement)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
-                VAL, Key("input"), ASSIGN, Key("readBoolean"), Parenthesis.OPEN, Data.String("Enter a boolean value [true/false]"), Parenthesis.CLOSE,
-                IF, Parenthesis.OPEN, Key("input"), Parenthesis.CLOSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE,
+                FUN, Identifier("main"), Bracket.OPEN,
+                VAL, Identifier("input"), ASSIGN, Identifier("readBoolean"), Parenthesis.OPEN, Data.String("Enter a boolean value [true/false]"), Parenthesis.CLOSE,
+                IF, Parenthesis.OPEN, Identifier("input"), Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 ELSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("Hiss"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hiss"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 Bracket.CLOSE,
             ),
@@ -101,29 +101,29 @@ internal class CrescentLexerTests {
     @Test
     fun stringInterpolation() {
 
-        val tokens = CrescentLexer.invoke(TestCode.stringInterpolation)
+        val tokens = Lexer.invoke(TestCode.stringInterpolation)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
+                FUN, Identifier("main"), Bracket.OPEN,
 
-                VAL, Key("x"), COMMA, Key("y"), COMMA, Key("z"), ASSIGN, Data.Number(0.toByte()),
+                VAL, Identifier("x"), COMMA, Identifier("y"), COMMA, Identifier("z"), ASSIGN, Data.Number(0.toByte()),
 
-                Key("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Data.String("Hello \$x\$y\$z Hello"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Data.String("Hello \$x Hello \$y Hello \$z Hello"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello \$x\$y\$z Hello"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello \$x Hello \$y Hello \$z Hello"), Parenthesis.CLOSE,
 
-                Key("println"), Parenthesis.OPEN, Data.String("\${x}\${y}\${z}"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Data.String("Hello \${x}\${y}\${z} Hello"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Data.String("Hello \${x}Hello\${y}Hello\${z} Hello"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\${x}\${y}\${z}"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello \${x}\${y}\${z} Hello"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello \${x}Hello\${y}Hello\${z} Hello"), Parenthesis.CLOSE,
 
                 Data.Comment("Should printout a dollar sign"),
-                Key("println"), Parenthesis.OPEN, Data.String("\${'$'}"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\${'$'}"), Parenthesis.CLOSE,
 
                 Data.Comment("Should println dollar sign next to the letter x"),
-                Key("println"), Parenthesis.OPEN, Data.String("\\\$x"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\\\$x"), Parenthesis.CLOSE,
 
-                Key("println"), Parenthesis.OPEN, Data.String("$ x"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("$ x"), Parenthesis.CLOSE,
 
                 Bracket.CLOSE,
             ),
@@ -134,28 +134,28 @@ internal class CrescentLexerTests {
     @Test
     fun forLoop1() {
 
-        val tokens = CrescentLexer.invoke(TestCode.forLoop1)
+        val tokens = Lexer.invoke(TestCode.forLoop1)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
+                FUN, Identifier("main"), Bracket.OPEN,
 
-                VAL, Key("x"), COMMA, Key("y"), COMMA, Key("z"), ASSIGN, Data.Number(0.toByte()),
-                Key("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
+                VAL, Identifier("x"), COMMA, Identifier("y"), COMMA, Identifier("z"), ASSIGN, Data.Number(0.toByte()),
+                Identifier("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
 
-                FOR, Key("x"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("\$x"), Parenthesis.CLOSE,
+                FOR, Identifier("x"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\$x"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
 
-                FOR, Key("x"), COMMA, Key("y"), COMMA, Key("z"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
+                FOR, Identifier("x"), COMMA, Identifier("y"), COMMA, Identifier("z"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
 
-                FOR, Key("x"), COMMA, Key("y"), COMMA, Key("z"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), COMMA, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), COMMA, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
+                FOR, Identifier("x"), COMMA, Identifier("y"), COMMA, Identifier("z"), CONTAINS, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), COMMA, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), COMMA, Data.Number(0.toByte()), RANGE_TO, Data.Number(9.toByte()), Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Data.String("\$x\$y\$z"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
 
-                Key("println"), Parenthesis.OPEN, Data.String("Hello World"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Data.String("Hello World"), Parenthesis.CLOSE,
 
                 Bracket.CLOSE,
             ),
@@ -166,17 +166,17 @@ internal class CrescentLexerTests {
     @Test
     fun whileLoop() {
 
-        val tokens = CrescentLexer.invoke(TestCode.whileLoop)
+        val tokens = Lexer.invoke(TestCode.whileLoop)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
+                FUN, Identifier("main"), Bracket.OPEN,
 
-                VAR, Key("x"), ASSIGN, Data.Number(1.toByte()),
+                VAR, Identifier("x"), ASSIGN, Data.Number(1.toByte()),
 
-                WHILE, Parenthesis.OPEN, Key("x"), LESSER_EQUALS_COMPARE, Data.Number(10.toByte()), Parenthesis.CLOSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Key("x"), Parenthesis.CLOSE,
-                Key("x"), ADD_ASSIGN, Data.Number(1.toByte()),
+                WHILE, Parenthesis.OPEN, Identifier("x"), LESSER_EQUALS_COMPARE, Data.Number(10.toByte()), Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Identifier("x"), Parenthesis.CLOSE,
+                Identifier("x"), ADD_ASSIGN, Data.Number(1.toByte()),
                 Bracket.CLOSE,
 
                 Bracket.CLOSE,
@@ -188,21 +188,21 @@ internal class CrescentLexerTests {
     @Test
     fun calculator() {
 
-        val tokens = CrescentLexer.invoke(TestCode.calculator)
+        val tokens = Lexer.invoke(TestCode.calculator)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
-                VAL, Key("input1"), ASSIGN, Key("readDouble"), Parenthesis.OPEN, Data.String("Enter your first number"), Parenthesis.CLOSE,
-                VAL, Key("input2"), ASSIGN, Key("readDouble"), Parenthesis.OPEN, Data.String("Enter your second number"), Parenthesis.CLOSE,
-                VAL, Key("operation"), ASSIGN, Key("readLine"), Parenthesis.OPEN, Data.String("Enter an operation [+, -, *, /]"), Parenthesis.CLOSE,
-                VAL, Key("result"), ASSIGN, WHEN, Parenthesis.OPEN, Key("operation"), Parenthesis.CLOSE, Bracket.OPEN,
-                Data.Char('+'), RETURN, Key("input1"), ADD, Key("input2"),
-                Data.Char('-'), RETURN, Key("input1"), SUB, Key("input2"),
-                Data.Char('*'), RETURN, Key("input1"), MUL, Key("input2"),
-                Data.Char('/'), RETURN, Key("input1"), DIV, Key("input2"),
+                FUN, Identifier("main"), Bracket.OPEN,
+                VAL, Identifier("input1"), ASSIGN, Identifier("readDouble"), Parenthesis.OPEN, Data.String("Enter your first number"), Parenthesis.CLOSE,
+                VAL, Identifier("input2"), ASSIGN, Identifier("readDouble"), Parenthesis.OPEN, Data.String("Enter your second number"), Parenthesis.CLOSE,
+                VAL, Identifier("operation"), ASSIGN, Identifier("readLine"), Parenthesis.OPEN, Data.String("Enter an operation [+, -, *, /]"), Parenthesis.CLOSE,
+                VAL, Identifier("result"), ASSIGN, WHEN, Parenthesis.OPEN, Identifier("operation"), Parenthesis.CLOSE, Bracket.OPEN,
+                Data.Char('+'), RETURN, Identifier("input1"), ADD, Identifier("input2"),
+                Data.Char('-'), RETURN, Identifier("input1"), SUB, Identifier("input2"),
+                Data.Char('*'), RETURN, Identifier("input1"), MUL, Identifier("input2"),
+                Data.Char('/'), RETURN, Identifier("input1"), DIV, Identifier("input2"),
                 Bracket.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("result"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("result"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
             ),
             tokens
@@ -212,25 +212,25 @@ internal class CrescentLexerTests {
     @Test
     fun constantsAndObject() {
 
-        val tokens = CrescentLexer.invoke(TestCode.constantsAndObject)
+        val tokens = Lexer.invoke(TestCode.constantsAndObject)
 
         assertContentEquals(
             listOf(
 
-                CONST, Key("thing1"), ASSIGN, Data.String("Mew"),
+                CONST, Identifier("thing1"), ASSIGN, Data.String("Mew"),
 
-                OBJECT, Key("Constants"), Bracket.OPEN,
-                CONST, Key("thing2"), ASSIGN, Data.String("Meow"),
-                FUN, Key("printThings"), Parenthesis.OPEN, Parenthesis.CLOSE, Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Key("thing1"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("thing2"), Parenthesis.CLOSE,
+                OBJECT, Identifier("Constants"), Bracket.OPEN,
+                CONST, Identifier("thing2"), ASSIGN, Data.String("Meow"),
+                FUN, Identifier("printThings"), Parenthesis.OPEN, Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Identifier("thing1"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("thing2"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 Bracket.CLOSE,
 
-                FUN, Key("main"), Bracket.OPEN,
-                Key("Constants"), DOT, Key("printThings"), Parenthesis.OPEN, Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("thing1"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("Constants"), DOT, Key("thing2"), Parenthesis.CLOSE,
+                FUN, Identifier("main"), Bracket.OPEN,
+                Identifier("Constants"), DOT, Identifier("printThings"), Parenthesis.OPEN, Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("thing1"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("Constants"), DOT, Identifier("thing2"), Parenthesis.CLOSE,
                 Bracket.CLOSE
             ),
             tokens
@@ -240,44 +240,44 @@ internal class CrescentLexerTests {
     @Test
     fun impl() {
 
-        val tokens = CrescentLexer.invoke(TestCode.impl)
+        val tokens = Lexer.invoke(TestCode.impl)
 
         assertContentEquals(
             listOf(
 
-                STRUCT, Key("Example"), Parenthesis.OPEN,
-                VAL, Key("aNumber"), TYPE_PREFIX, Key("I32"), Data.Comment("New lines makes commas redundant"),
-                VAL, Key("aValue1"), Key("aValue2"), ASSIGN, Data.String(""), Data.Comment("Multi declaration of same type, can all be set to one or multiple default values"),
+                STRUCT, Identifier("Example"), Parenthesis.OPEN,
+                VAL, Identifier("aNumber"), TYPE_PREFIX, Identifier("I32"), Data.Comment("New lines makes commas redundant"),
+                VAL, Identifier("aValue1"), Identifier("aValue2"), ASSIGN, Data.String(""), Data.Comment("Multi declaration of same type, can all be set to one or multiple default values"),
                 Parenthesis.CLOSE,
 
-                IMPL, Key("Example"), Bracket.OPEN,
+                IMPL, Identifier("Example"), Bracket.OPEN,
                 Data.Comment("All implementation methods"),
-                FUN, Key("printValues"), Bracket.OPEN,
-                Key("println"), Parenthesis.OPEN, Key("aNumber"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("aValue1"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("aValue2"), Parenthesis.CLOSE,
+                FUN, Identifier("printValues"), Bracket.OPEN,
+                Identifier("println"), Parenthesis.OPEN, Identifier("aNumber"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("aValue1"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("aValue2"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
                 Bracket.CLOSE,
 
                 Data.Comment("Can't use self in static syntax"),
-                IMPL, Modifier.STATIC, Key("Example"), Bracket.OPEN,
-                FUN, Key("add"), Parenthesis.OPEN, Key("value1"), Key("value2"), TYPE_PREFIX, Key("I32"), Parenthesis.CLOSE, RETURN, Key("I32"), Bracket.OPEN,
-                RETURN, Key("value1"), ADD, Key("value2"),
+                IMPL, Modifier.STATIC, Identifier("Example"), Bracket.OPEN,
+                FUN, Identifier("add"), Parenthesis.OPEN, Identifier("value1"), Identifier("value2"), TYPE_PREFIX, Identifier("I32"), Parenthesis.CLOSE, RETURN, Identifier("I32"), Bracket.OPEN,
+                RETURN, Identifier("value1"), ADD, Identifier("value2"),
                 Bracket.CLOSE,
-                FUN, Key("sub"), Parenthesis.OPEN, Key("value1"), Key("value2"), TYPE_PREFIX, Key("I32"), Parenthesis.CLOSE, RETURN, Key("I32"), Bracket.OPEN,
-                RETURN, Key("value1"), SUB, Key("value2"),
+                FUN, Identifier("sub"), Parenthesis.OPEN, Identifier("value1"), Identifier("value2"), TYPE_PREFIX, Identifier("I32"), Parenthesis.CLOSE, RETURN, Identifier("I32"), Bracket.OPEN,
+                RETURN, Identifier("value1"), SUB, Identifier("value2"),
                 Bracket.CLOSE,
                 Bracket.CLOSE,
 
-                FUN, Key("main"), Bracket.OPEN,
-                VAL, Key("example"), ASSIGN, Key("Example"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.String("Meow"), COMMA, Data.String("Mew"), Parenthesis.CLOSE,
-                Key("example"), DOT, Key("printValues"), Parenthesis.OPEN, Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("example"), DOT, Key("aNumber"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("example"), DOT, Key("aValue1"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("example"), DOT, Key("aValue2"), Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("Example"), DOT, Key("add"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.Number(2.toByte()), Parenthesis.CLOSE, Parenthesis.CLOSE,
-                Key("println"), Parenthesis.OPEN, Key("Example"), DOT, Key("sub"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.Number(2.toByte()), Parenthesis.CLOSE, Parenthesis.CLOSE,
+                FUN, Identifier("main"), Bracket.OPEN,
+                VAL, Identifier("example"), ASSIGN, Identifier("Example"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.String("Meow"), COMMA, Data.String("Mew"), Parenthesis.CLOSE,
+                Identifier("example"), DOT, Identifier("printValues"), Parenthesis.OPEN, Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("example"), DOT, Identifier("aNumber"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("example"), DOT, Identifier("aValue1"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("example"), DOT, Identifier("aValue2"), Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("Example"), DOT, Identifier("add"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.Number(2.toByte()), Parenthesis.CLOSE, Parenthesis.CLOSE,
+                Identifier("println"), Parenthesis.OPEN, Identifier("Example"), DOT, Identifier("sub"), Parenthesis.OPEN, Data.Number(1.toByte()), COMMA, Data.Number(2.toByte()), Parenthesis.CLOSE, Parenthesis.CLOSE,
                 Bracket.CLOSE,
             ),
             tokens
@@ -288,19 +288,19 @@ internal class CrescentLexerTests {
     @Test
     fun math() {
 
-        val tokens = CrescentLexer.invoke(TestCode.math)
+        val tokens = Lexer.invoke(TestCode.math)
 
         assertContentEquals(
             listOf(
-                FUN, Key("main"), Bracket.OPEN,
+                FUN, Identifier("main"), Bracket.OPEN,
 
-                Key("println"), Parenthesis.OPEN,
+                Identifier("println"), Parenthesis.OPEN,
                 Parenthesis.OPEN, Data.Number(1.0.toInt().toByte()), ADD, Data.Number(1.toByte()), Parenthesis.CLOSE,
                 ADD, Data.Number(1.0.toInt().toByte()), DIV, Data.Number(10.0.toInt().toByte()), ADD, Data.Number(1000.0.toInt().toShort()), MUL, Data.Number(10.0.toInt().toByte()),
                 DIV, Data.Number(11.0.toInt().toByte()), POW, Data.Number(10.0.toInt().toByte()),
                 Parenthesis.CLOSE,
 
-                Key("println"), Parenthesis.OPEN,
+                Identifier("println"), Parenthesis.OPEN,
                 Data.Number(4.toByte()), MUL, Parenthesis.OPEN, Data.Number(3.toByte()), Parenthesis.CLOSE, ADD, Data.Number(1.toByte()),
                 Parenthesis.CLOSE,
 
@@ -313,14 +313,14 @@ internal class CrescentLexerTests {
     @Test
     fun sealed() {
 
-        val tokens = CrescentLexer.invoke(TestCode.sealed)
+        val tokens = Lexer.invoke(TestCode.sealed)
 
         assertContentEquals(
             listOf(
-                SEALED, Key("Example"), Bracket.OPEN,
-                STRUCT, Key("Thing1"), Parenthesis.OPEN, VAL, Key("name"), TYPE_PREFIX, Key("String"), Parenthesis.CLOSE,
-                STRUCT, Key("Thing2"), Parenthesis.OPEN, VAL, Key("id"), TYPE_PREFIX, Key("i32"), Parenthesis.CLOSE,
-                OBJECT, Key("Thing3"),
+                SEALED, Identifier("Example"), Bracket.OPEN,
+                STRUCT, Identifier("Thing1"), Parenthesis.OPEN, VAL, Identifier("name"), TYPE_PREFIX, Identifier("String"), Parenthesis.CLOSE,
+                STRUCT, Identifier("Thing2"), Parenthesis.OPEN, VAL, Identifier("id"), TYPE_PREFIX, Identifier("i32"), Parenthesis.CLOSE,
+                OBJECT, Identifier("Thing3"),
                 Bracket.CLOSE,
             ),
             tokens
@@ -330,31 +330,31 @@ internal class CrescentLexerTests {
     @Test
     fun enum() {
 
-        val tokens = CrescentLexer.invoke(TestCode.enum)
+        val tokens = Lexer.invoke(TestCode.enum)
 
         assertContentEquals(
             listOf(
 
-                ENUM, Key("Color"), Parenthesis.OPEN, Key("name"), TYPE_PREFIX, Key("String"), Parenthesis.CLOSE, Bracket.OPEN,
-                Key("RED"), Parenthesis.OPEN, Data.String("Red"), Parenthesis.CLOSE,
-                Key("GREEN"), Parenthesis.OPEN, Data.String("Green"), Parenthesis.CLOSE,
-                Key("BLUE"), Parenthesis.OPEN, Data.String("Blue"), Parenthesis.CLOSE,
+                ENUM, Identifier("Color"), Parenthesis.OPEN, Identifier("name"), TYPE_PREFIX, Identifier("String"), Parenthesis.CLOSE, Bracket.OPEN,
+                Identifier("RED"), Parenthesis.OPEN, Data.String("Red"), Parenthesis.CLOSE,
+                Identifier("GREEN"), Parenthesis.OPEN, Data.String("Green"), Parenthesis.CLOSE,
+                Identifier("BLUE"), Parenthesis.OPEN, Data.String("Blue"), Parenthesis.CLOSE,
                 Bracket.CLOSE,
 
-                FUN, Key("main"), Bracket.OPEN,
+                FUN, Identifier("main"), Bracket.OPEN,
 
                 Data.Comment(".random() will be built into the Enum type implementation"),
-                VAL, Key("color"), ASSIGN, Key("Color"), DOT, Key("random"), Parenthesis.OPEN, Parenthesis.CLOSE,
+                VAL, Identifier("color"), ASSIGN, Identifier("Color"), DOT, Identifier("random"), Parenthesis.OPEN, Parenthesis.CLOSE,
                 Data.Comment("Shows off cool Enum shorthand for when statements"),
 
-                WHEN, Parenthesis.OPEN, Key("color"), Parenthesis.CLOSE, Bracket.OPEN,
-                DOT, Key("RED"), RETURN, Bracket.OPEN, Key("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE, Bracket.CLOSE,
-                DOT, Key("GREEN"), RETURN, Bracket.OPEN, Bracket.CLOSE,
+                WHEN, Parenthesis.OPEN, Identifier("color"), Parenthesis.CLOSE, Bracket.OPEN,
+                DOT, Identifier("RED"), RETURN, Bracket.OPEN, Identifier("println"), Parenthesis.OPEN, Data.String("Meow"), Parenthesis.CLOSE, Bracket.CLOSE,
+                DOT, Identifier("GREEN"), RETURN, Bracket.OPEN, Bracket.CLOSE,
                 ELSE, RETURN, Bracket.OPEN, Bracket.CLOSE,
                 Bracket.CLOSE,
 
-                WHEN, Parenthesis.OPEN, Key("name"), ASSIGN, Key("color"), DOT, Key("name"), Parenthesis.CLOSE, Bracket.OPEN,
-                Data.String("Red"), RETURN, Key("println"), Parenthesis.OPEN, Key("name"), Parenthesis.CLOSE,
+                WHEN, Parenthesis.OPEN, Identifier("name"), ASSIGN, Identifier("color"), DOT, Identifier("name"), Parenthesis.CLOSE, Bracket.OPEN,
+                Data.String("Red"), RETURN, Identifier("println"), Parenthesis.OPEN, Identifier("name"), Parenthesis.CLOSE,
                 Data.String("Green"), RETURN, Bracket.OPEN, Bracket.CLOSE,
                 ELSE, RETURN, Bracket.OPEN, Bracket.CLOSE,
                 Bracket.CLOSE,
@@ -369,13 +369,13 @@ internal class CrescentLexerTests {
     @Test
     fun comments() {
 
-        val tokens = CrescentLexer.invoke(TestCode.comments)
+        val tokens = Lexer.invoke(TestCode.comments)
 
         assertContentEquals(
             listOf(
                 Data.Comment("Project level comment"),
-                FUN, Key("main"), Bracket.OPEN,
-                Key("println"), Data.Comment("(\"Meow\")"),
+                FUN, Identifier("main"), Bracket.OPEN,
+                Identifier("println"), Data.Comment("(\"Meow\")"),
                 Data.Comment("Meow"),
                 Data.Comment("Meow"),
                 Data.String("#meow"),
@@ -393,20 +393,20 @@ internal class CrescentLexerTests {
     @Test
     fun imports() {
 
-        val tokens = CrescentLexer.invoke(TestCode.imports)
+        val tokens = Lexer.invoke(TestCode.imports)
 
         assertContentEquals(
             listOf(
                 Data.Comment("Current idea, Package -> Type"),
-                IMPORT, Key("crescent"), DOT, Key("examples"), IMPORT_SEPARATOR, Key("Thing"),
-                IMPORT, Key("crescent"), DOT, Key("examples"), IMPORT_SEPARATOR, Key("Thing2"), AS, Key("Thing3"),
-                IMPORT, Key("crescent"), DOT, Key("examples"), IMPORT_SEPARATOR, MUL,
+                IMPORT, Identifier("crescent"), DOT, Identifier("examples"), IMPORT_SEPARATOR, Identifier("Thing"),
+                IMPORT, Identifier("crescent"), DOT, Identifier("examples"), IMPORT_SEPARATOR, Identifier("Thing2"), AS, Identifier("Thing3"),
+                IMPORT, Identifier("crescent"), DOT, Identifier("examples"), IMPORT_SEPARATOR, MUL,
 
                 Data.Comment("import crescent.examples as examples"),//IMPORT, Key("crescent"), DOT, Key("examples"), AS, Key("examples"),
 
                 Data.Comment("Short hand method (If in same package)"),
-                IMPORT, IMPORT_SEPARATOR, Key("Thing"),
-                IMPORT, IMPORT_SEPARATOR, Key("Thing2"), AS, Key("Thing3")
+                IMPORT, IMPORT_SEPARATOR, Identifier("Thing"),
+                IMPORT, IMPORT_SEPARATOR, Identifier("Thing2"), AS, Identifier("Thing3")
             ),
             tokens
         )
@@ -416,39 +416,39 @@ internal class CrescentLexerTests {
     @Test
     fun nateTriangle() {
 
-        val tokens = CrescentLexer.invoke(TestCode.nateTriangle)
+        val tokens = Lexer.invoke(TestCode.nateTriangle)
 
         println(tokens)
 
         assertContentEquals(
             listOf(
-                FUN, Key("triangle"), Parenthesis.OPEN, Key("n"), TYPE_PREFIX, Key("Any"), COMMA, Key("k"), TYPE_PREFIX, Key("Any"), Parenthesis.CLOSE, Bracket.OPEN,
+                FUN, Identifier("triangle"), Parenthesis.OPEN, Identifier("n"), TYPE_PREFIX, Identifier("Any"), COMMA, Identifier("k"), TYPE_PREFIX, Identifier("Any"), Parenthesis.CLOSE, Bracket.OPEN,
 
-                    IF, Parenthesis.OPEN, Key("n"), GREATER_EQUALS_COMPARE, Data.Number(0.toByte()), Parenthesis.CLOSE, Bracket.OPEN,
+                    IF, Parenthesis.OPEN, Identifier("n"), GREATER_EQUALS_COMPARE, Data.Number(0.toByte()), Parenthesis.CLOSE, Bracket.OPEN,
 
-                        Key("triangle"), Parenthesis.OPEN, Key("n"), SUB, Data.Number((1).toByte()), COMMA, Key("k"), ADD, Data.Number(1.toByte()), Parenthesis.CLOSE,
+                        Identifier("triangle"), Parenthesis.OPEN, Identifier("n"), SUB, Data.Number((1).toByte()), COMMA, Identifier("k"), ADD, Data.Number(1.toByte()), Parenthesis.CLOSE,
 
-                        VAR, Key("x"), TYPE_PREFIX, Key("I32"), ASSIGN, Data.Number(0.toByte()),
-                        VAR, Key("y"), TYPE_PREFIX, Key("I32"), ASSIGN, Data.Number(0.toByte()),
+                        VAR, Identifier("x"), TYPE_PREFIX, Identifier("I32"), ASSIGN, Data.Number(0.toByte()),
+                        VAR, Identifier("y"), TYPE_PREFIX, Identifier("I32"), ASSIGN, Data.Number(0.toByte()),
 
-                        WHILE, Parenthesis.OPEN, Key("x"), LESSER_COMPARE, Key("k"), Parenthesis.CLOSE, Bracket.OPEN,
-                            Key("print"), Parenthesis.OPEN, Data.String(" "), Parenthesis.CLOSE,
-                            Key("x"), ASSIGN, Key("x"), ADD, Data.Number(1.toByte()),
+                        WHILE, Parenthesis.OPEN, Identifier("x"), LESSER_COMPARE, Identifier("k"), Parenthesis.CLOSE, Bracket.OPEN,
+                            Identifier("print"), Parenthesis.OPEN, Data.String(" "), Parenthesis.CLOSE,
+                            Identifier("x"), ASSIGN, Identifier("x"), ADD, Data.Number(1.toByte()),
                         Bracket.CLOSE,
 
-                        WHILE, Parenthesis.OPEN, Key("y"), LESSER_COMPARE, Key("n"), Parenthesis.CLOSE, Bracket.OPEN,
-                            Key("print"), Parenthesis.OPEN, Data.String("* "), Parenthesis.CLOSE,
-                            Key("y"), ASSIGN, Key("y"), ADD, Data.Number(1.toByte()),
+                        WHILE, Parenthesis.OPEN, Identifier("y"), LESSER_COMPARE, Identifier("n"), Parenthesis.CLOSE, Bracket.OPEN,
+                            Identifier("print"), Parenthesis.OPEN, Data.String("* "), Parenthesis.CLOSE,
+                            Identifier("y"), ASSIGN, Identifier("y"), ADD, Data.Number(1.toByte()),
                         Bracket.CLOSE,
 
-                        Key("println"), Parenthesis.OPEN, Parenthesis.CLOSE,
+                        Identifier("println"), Parenthesis.OPEN, Parenthesis.CLOSE,
 
                     Bracket.CLOSE,
 
                 Bracket.CLOSE,
 
-                FUN, Key("main"), Parenthesis.OPEN, Parenthesis.CLOSE, Bracket.OPEN,
-                    Key("triangle"), Parenthesis.OPEN, Data.Number(5.toByte()), COMMA, Data.Number(0.toByte()), Parenthesis.CLOSE,
+                FUN, Identifier("main"), Parenthesis.OPEN, Parenthesis.CLOSE, Bracket.OPEN,
+                    Identifier("triangle"), Parenthesis.OPEN, Data.Number(5.toByte()), COMMA, Data.Number(0.toByte()), Parenthesis.CLOSE,
                 Bracket.CLOSE
             ),
             tokens

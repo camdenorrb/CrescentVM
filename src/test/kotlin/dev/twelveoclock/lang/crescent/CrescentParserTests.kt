@@ -2,18 +2,14 @@ package dev.twelveoclock.lang.crescent
 
 import dev.twelveoclock.lang.crescent.data.TestCode
 import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.*
-import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Enum
-import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Function
-import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Primitive.Char
 import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Primitive.Number.I16
 import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Primitive.Number.I8
-import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Primitive.String
 import dev.twelveoclock.lang.crescent.language.ast.CrescentAST.Node.Statement.When
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Operator.*
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken.Visibility
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
-import dev.twelveoclock.lang.crescent.parsers.CrescentParser
+import dev.twelveoclock.lang.crescent.lexers.Lexer
+import dev.twelveoclock.lang.crescent.parsers.Parser
 import java.nio.file.Path
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
@@ -24,10 +20,10 @@ internal class CrescentParserTests {
     @Test
     fun helloWorld() {
 
-        val tokens = CrescentLexer.invoke(TestCode.helloWorlds)
+        val tokens = Lexer.invoke(TestCode.helloWorlds)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -54,8 +50,8 @@ internal class CrescentParserTests {
     @Test
     fun ifStatement() {
 
-        val tokens = CrescentLexer.invoke(TestCode.ifStatement)
-        val parsed = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.ifStatement)
+        val parsed = Parser.invoke(Path.of("example.crescent"), tokens)
 
         val mainFunction = assertNotNull(
             parsed.mainFunction,
@@ -116,10 +112,10 @@ internal class CrescentParserTests {
     @Test
     fun ifInputStatement() {
 
-        val tokens = CrescentLexer.invoke(TestCode.ifInputStatement)
+        val tokens = Lexer.invoke(TestCode.ifInputStatement)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -154,10 +150,10 @@ internal class CrescentParserTests {
     @Test
     fun stringInterpolation() {
 
-        val tokens = CrescentLexer.invoke(TestCode.stringInterpolation)
+        val tokens = Lexer.invoke(TestCode.stringInterpolation)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -187,10 +183,10 @@ internal class CrescentParserTests {
     @Test
     fun forLoop1() {
 
-        val tokens = CrescentLexer.invoke(TestCode.forLoop1)
+        val tokens = Lexer.invoke(TestCode.forLoop1)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -235,10 +231,10 @@ internal class CrescentParserTests {
     @Test
     fun whileLoop() {
 
-        val tokens = CrescentLexer.invoke(TestCode.whileLoop)
+        val tokens = Lexer.invoke(TestCode.whileLoop)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -263,10 +259,10 @@ internal class CrescentParserTests {
     @Test
     fun calculator() {
 
-        val tokens = CrescentLexer.invoke(TestCode.calculator)
+        val tokens = Lexer.invoke(TestCode.calculator)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -341,8 +337,8 @@ internal class CrescentParserTests {
     @Test
     fun constantsAndObject() {
 
-        val tokens = CrescentLexer.invoke(TestCode.constantsAndObject)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.constantsAndObject)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         assertContentEquals(
             listOf(Variable.Constant("thing1", Type.Implicit, String("Mew"), Visibility.PUBLIC)),
@@ -351,7 +347,7 @@ internal class CrescentParserTests {
         )
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -387,8 +383,8 @@ internal class CrescentParserTests {
     @Test
     fun impl() {
 
-        val tokens = CrescentLexer.invoke(TestCode.impl)
-        val parsed = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.impl)
+        val parsed = Parser.invoke(Path.of("example.crescent"), tokens)
         val mainFunction = assertNotNull(parsed.mainFunction, "No main function found")
 
         assertContentEquals(
@@ -486,10 +482,10 @@ internal class CrescentParserTests {
     @Test
     fun math() {
 
-        val tokens = CrescentLexer.invoke(TestCode.math)
+        val tokens = Lexer.invoke(TestCode.math)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -515,8 +511,8 @@ internal class CrescentParserTests {
     @Test
     fun sealed() {
 
-        val tokens = CrescentLexer.invoke(TestCode.sealed)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.sealed)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         val sealedExample = assertNotNull(
             crescentFile.sealeds["Example"],
@@ -555,11 +551,11 @@ internal class CrescentParserTests {
     @Test
     fun enum() {
 
-        val tokens = CrescentLexer.invoke(TestCode.enum)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.enum)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         val mainFunction = assertNotNull(
-            CrescentParser.invoke(Path.of("example.crescent"), tokens).mainFunction,
+            Parser.invoke(Path.of("example.crescent"), tokens).mainFunction,
             "No main function found"
         )
 
@@ -630,8 +626,8 @@ internal class CrescentParserTests {
     @Test
     fun comments() {
 
-        val tokens = CrescentLexer.invoke(TestCode.comments)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.comments)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         val mainFunction = assertNotNull(
             crescentFile.mainFunction,
@@ -652,8 +648,8 @@ internal class CrescentParserTests {
     @Test
     fun imports() {
 
-        val tokens = CrescentLexer.invoke(TestCode.imports)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.imports)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         assertContentEquals(
             listOf(
@@ -672,8 +668,8 @@ internal class CrescentParserTests {
     @Test
     fun nateTriangle() {
 
-        val tokens = CrescentLexer.invoke(TestCode.nateTriangle)
-        val crescentFile = CrescentParser.invoke(Path.of("example.crescent"), tokens)
+        val tokens = Lexer.invoke(TestCode.nateTriangle)
+        val crescentFile = Parser.invoke(Path.of("example.crescent"), tokens)
 
         assertContentEquals(
             listOf(

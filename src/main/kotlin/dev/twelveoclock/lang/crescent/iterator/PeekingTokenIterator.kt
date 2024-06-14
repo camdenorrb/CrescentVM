@@ -24,11 +24,11 @@ class PeekingTokenIterator(val input: List<CrescentToken>) : Iterator<CrescentTo
 
 
 	fun peekNext(amount: Int = 1): CrescentToken {
-		return input.getOrElse(index + (amount - 1)) { CrescentToken.None }
+		return input.getOrElse(index + (amount - 1)) { CrescentToken.Empty }
 	}
 
 	fun peekBack(amount: Int = 1): CrescentToken {
-		return input.getOrElse(index - amount) { CrescentToken.None }
+		return input.getOrElse(index - amount) { CrescentToken.Empty }
 	}
 
 

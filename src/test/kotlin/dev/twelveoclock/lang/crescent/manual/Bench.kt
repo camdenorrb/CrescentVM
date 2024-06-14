@@ -1,8 +1,8 @@
 package dev.twelveoclock.lang.crescent.manual
 
 import dev.twelveoclock.lang.crescent.data.TestCode
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
-import dev.twelveoclock.lang.crescent.parsers.CrescentParser
+import dev.twelveoclock.lang.crescent.lexers.Lexer
+import dev.twelveoclock.lang.crescent.parsers.Parser
 //import dev.twelveoclock.lang.crescent.vm.CrescentToPTIR
 import dev.twelveoclock.lang.crescent.vm.CrescentVM
 //import tech.poder.ir.Machine
@@ -88,15 +88,15 @@ internal object Bench {
 
 		lexerBenchmark.apply {
 			bench(name) {
-				CrescentLexer.invoke(code)
+				Lexer.invoke(code)
 			}
 		}
 
-		val tokens = CrescentLexer.invoke(code)
+		val tokens = Lexer.invoke(code)
 
 		parserBenchmark.apply {
 			bench(name) {
-				CrescentParser.invoke(filePath, tokens)
+				Parser.invoke(filePath, tokens)
 			}
 		}
 
@@ -107,8 +107,8 @@ internal object Bench {
 
 	fun benchVM(name: String, code: String, args: List<String> = emptyList()) {
 
-		val tokens = CrescentLexer.invoke(code)
-		val parsed = CrescentParser.invoke(Path("example.moo"), tokens)
+		val tokens = Lexer.invoke(code)
+		val parsed = Parser.invoke(Path("example.moo"), tokens)
 		//val methods = CrescentToPTIR.craft(parsed)
 
 		val vm = CrescentVM(listOf(parsed), parsed)

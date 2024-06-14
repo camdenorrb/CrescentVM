@@ -2,16 +2,18 @@ package dev.twelveoclock.lang.crescent.lexers
 
 import dev.twelveoclock.lang.crescent.iterator.PeekingCharIterator
 import dev.twelveoclock.lang.crescent.language.token.CrescentToken
+import dev.twelveoclock.lang.crescent.language.token.Token
 import dev.twelveoclock.lang.crescent.project.checkEquals
 import dev.twelveoclock.lang.crescent.project.extensions.minimize
 
 // TODO: Support negative numbers
-object CrescentLexer {
+// TODO: Make this generic
+object Lexer {
 
 	// TODO: Remake to act like how my filter works, finds all matches and eliminates as it continues to read
-	fun invoke(input: String): List<CrescentToken> {
+	fun invoke(input: String): List<Token> {
 
-		val tokens = mutableListOf<CrescentToken>()
+		val tokens = mutableListOf<Token>()
 		val charIterator = PeekingCharIterator(input)
 
 		while (charIterator.hasNext()) {
@@ -65,7 +67,7 @@ object CrescentLexer {
 				else -> {
 					when {
 
-						(peekNext == '.' && charIterator.peekNext(2).isDigit()) || peekNext.isDigit() -> {
+						peekNext.isDigit() || (peekNext == '.' && charIterator.peekNext(2).isDigit()) -> {
 
 							isANumber = true
 
@@ -89,13 +91,11 @@ object CrescentLexer {
 
 			if (isANumber) {
 
-				// TODO: Determine type of number
-
 				tokens +=
 					if ('.' in key) {
-						CrescentToken.Data.Number(key.toDouble().minimize())
+						Token.Primitive.Number(key.toDouble().minimize())
 					} else {
-						CrescentToken.Data.Number(key.toLong().minimize())
+						Token.Primitive.Number(key.toLong().minimize())
 					}
 
 				continue
@@ -107,16 +107,16 @@ object CrescentLexer {
 				";" -> continue
 
 				// Parenthesis
-				"(" -> CrescentToken.Parenthesis.OPEN
-				")" -> CrescentToken.Parenthesis.CLOSE
+				"(" -> CrescentToken.Parenthesis.LEFT
+				")" -> CrescentToken.Parenthesis.RIGHT
 
 				// Bracket
-				"{" -> CrescentToken.Bracket.OPEN
-				"}" -> CrescentToken.Bracket.CLOSE
+				"{" -> CrescentToken.Brace.LEFT
+				"}" -> CrescentToken.Brace.RIGHT
 
 				// Array declaration
-				"[" -> CrescentToken.SquareBracket.OPEN
-				"]" -> CrescentToken.SquareBracket.CLOSE
+				"[" -> CrescentToken.Bracket.LEFT
+				"]" -> CrescentToken.Bracket.RIGHT
 
 				// Infix Operators
 				"in" -> CrescentToken.Operator.CONTAINS
@@ -202,15 +202,15 @@ object CrescentLexer {
 
 				// String
 				// TODO: Add support for ${} - No this will be done in the parser
-				"\"" -> CrescentToken.Data.String(charIterator.nextUntilAndSkip('"'))
+				"\"" -> Token.Primitive.String(charIterator.nextUntilAndSkip('"'))
 				"'" -> {
 					val data = charIterator.nextUntilAndSkip('\'')
 					checkEquals(1, data.length)
-					CrescentToken.Data.Char(data[0])
+					Token.Primitive.Char(data[0])
 				}
 
 				// Comment
-				"#" -> CrescentToken.Data.Comment(charIterator.nextUntil('\n').trim())
+				"#" -> Token.Comment(charIterator.nextUntil('\n').trim())
 
 				// Keywords
 				"break" -> CrescentToken.Keyword.BREAK
@@ -225,10 +225,10 @@ object CrescentLexer {
 				"." -> CrescentToken.Operator.DOT
 				"::" -> CrescentToken.Operator.IMPORT_SEPARATOR
 
-				"true" -> CrescentToken.Data.Boolean(true)
-				"false" -> CrescentToken.Data.Boolean(false)
+				"true" -> Token.Primitive.Boolean(true)
+				"false" -> Token.Primitive.Boolean(false)
 
-				else -> CrescentToken.Key(key)
+				else -> Token.Name(key)
 			}
 		}
 
@@ -237,11 +237,14 @@ object CrescentLexer {
 
 	fun readNumber(charIterator: PeekingCharIterator): String {
 		return charIterator.nextUntil {
+			!it.isDigit() && it != '.'
+			/*
 			if (it == '.' && charIterator.peekNext(2) != '.') {
 				false
 			} else {
 				!it.isDigit()
 			}
+			*/
 		}
 	}
 

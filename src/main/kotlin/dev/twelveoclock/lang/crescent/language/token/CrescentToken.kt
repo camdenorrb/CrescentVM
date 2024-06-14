@@ -1,104 +1,20 @@
 package dev.twelveoclock.lang.crescent.language.token
 
-import dev.twelveoclock.lang.crescent.language.ast.CrescentAST
-
 // TODO: Make a way to reconstruct the code through .toString
 // TODO: Add ++ and --
 // TODO: Add Operator keyword
 // TODO: Error keyword
 // TODO: Maybe remove majority of these and let the parser determine it, EX: Import, while
 // TODO: Store line numbers, start/end char positions
-interface CrescentToken {
+object CrescentToken {
 
-	// Used only by the token iterator
-	object None : CrescentToken
-
-	@JvmInline
-	value class Key(
-		val string: String
-	) : CrescentToken {
-
-		override fun toString(): String {
-			return string
-		}
-
-	}
-
-	interface Data : CrescentToken {
-
-		@JvmInline
-		value class Number(
-			val number: kotlin.Number
-		) : Data {
-
-			override fun toString(): kotlin.String {
-				return "Number(${number} ${number::class.simpleName})"
-			}
-		}
-
-		// TODO: Take in expressions
-		@JvmInline
-		value class String(
-			val kotlinString: kotlin.String
-		) : Data
-
-		@JvmInline
-		value class Boolean(
-			val kotlinBoolean: kotlin.Boolean
-		) : Data
-
-		@JvmInline
-		value class Char(
-			val kotlinChar: kotlin.Char
-		) : Data
-
-		@JvmInline
-		value class Comment(
-			val string: kotlin.String
-		) : Data
-
-	}
-
-	enum class Parenthesis : CrescentToken {
-
-		OPEN,
-		CLOSE,
-		;
-
-		override fun toString(): String {
-			return if (this == OPEN) "(" else ")"
-		}
-	}
-
-	enum class Bracket : CrescentToken {
-
-		OPEN,
-		CLOSE,
-		;
-
-		override fun toString(): String {
-			return if (this == OPEN) "{" else "}"
-		}
-	}
-
-	enum class SquareBracket : CrescentToken {
-
-		OPEN,
-		CLOSE,
-		;
-
-		override fun toString(): String {
-			return if (this == OPEN) "[" else "]"
-		}
-	}
-
-	enum class Variable : CrescentToken {
+	enum class Variable : Token {
 		VAL,
 		VAR,
 		CONST,
 	}
 
-	enum class Type : CrescentToken {
+	enum class Type : Token {
 		STRUCT,
 		IMPL,
 		TRAIT,
@@ -107,7 +23,7 @@ interface CrescentToken {
 		SEALED,
 	}
 
-	enum class Statement : CrescentToken {
+	enum class Statement : Token {
 		IMPORT,
 		WHILE,
 		WHEN,
@@ -117,13 +33,13 @@ interface CrescentToken {
 		ELSE,
 	}
 
-	enum class Visibility : CrescentToken {
+	enum class Visibility : Token {
 		PRIVATE,
 		INTERNAL,
 		PUBLIC,
 	}
 
-	enum class Modifier : CrescentToken {
+	enum class Modifier : Token {
 		ASYNC,
 		OVERRIDE,
 		OPERATOR,
@@ -133,14 +49,47 @@ interface CrescentToken {
 	}
 
 
-	enum class Keyword(val literal: String) : CrescentToken, CrescentAST.Node {
+	enum class Keyword(val literal: String) : Token {
 		SELF("self"),
 		BREAK("break"),
 		CONTINUE("continue"),
 	}
 
+	enum class Parenthesis : Token {
+
+		LEFT,
+		RIGHT,
+		;
+
+		override fun toString(): String {
+			return if (this == LEFT) "(" else ")"
+		}
+	}
+
+	enum class Brace : Token {
+
+		LEFT,
+		RIGHT,
+		;
+
+		override fun toString(): String {
+			return if (this == LEFT) "{" else "}"
+		}
+	}
+
+	enum class Bracket : Token {
+
+		LEFT,
+		RIGHT,
+		;
+
+		override fun toString(): String {
+			return if (this == LEFT) "[" else "]"
+		}
+	}
+
 	// TODO: Precedence
-	enum class Operator(val literal: String) : CrescentToken, CrescentAST.Node {
+	enum class Operator(val literal: String) : Token.Operator {
 		//NEW_LINE("\n"),
 		NOT("!"),
 		ADD("+"),
@@ -183,34 +132,8 @@ interface CrescentToken {
 		AS("as"),
 		IMPORT_SEPARATOR("::"),
 		INSTANCE_OF("is"),
-		NOT_INSTANCE_OF("!is"),
+		//NOT_INSTANCE_OF("!is"),
 	}
 
-	enum class Primitive : CrescentToken {
-
-		I8,
-		I16,
-		I32,
-		I64,
-
-		U8,
-		U16,
-		U32,
-		U64,
-
-		F32,
-		F64,
-
-		// Other types built into the language
-		//Array,
-		//List,
-		//Map,
-		//Tensor,
-		//Char,
-		//Text,
-		//Fun,
-		//Time,
-		//Struct
-	}
 
 }

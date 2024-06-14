@@ -1,8 +1,8 @@
 package dev.twelveoclock.lang.crescent
 
 import dev.twelveoclock.lang.crescent.data.TestCode
-import dev.twelveoclock.lang.crescent.lexers.CrescentLexer
-import dev.twelveoclock.lang.crescent.parsers.CrescentParser
+import dev.twelveoclock.lang.crescent.lexers.Lexer
+import dev.twelveoclock.lang.crescent.parsers.Parser
 import dev.twelveoclock.lang.crescent.vm.CrescentVM
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -47,7 +47,7 @@ internal class CrescentVMTests {
 	@Test
 	fun helloWorld() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.helloWorlds))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.helloWorlds))
 
 		assertEquals(
 			"""
@@ -65,7 +65,7 @@ internal class CrescentVMTests {
 	@Test
 	fun argsHelloWorld() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.argsHelloWorld))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.argsHelloWorld))
 
 		println(file.mainFunction!!.innerCode.nodes)
 
@@ -81,7 +81,7 @@ internal class CrescentVMTests {
 	@Test
 	fun funThing() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.funThing))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.funThing))
 
 		assertEquals(
 			"""
@@ -105,7 +105,7 @@ internal class CrescentVMTests {
 	@Test
 	fun ifStatement() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.ifStatement))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.ifStatement))
 
 		assertEquals(
 			"""
@@ -133,7 +133,7 @@ internal class CrescentVMTests {
 	@Test
 	fun ifInputStatement() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.ifInputStatement))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.ifInputStatement))
 
 		assertEquals(
 			"""
@@ -165,7 +165,7 @@ internal class CrescentVMTests {
 	@Test
 	fun stringInterpolation() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.stringInterpolation))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.stringInterpolation))
 
 		assertEquals(
 			"""
@@ -189,7 +189,7 @@ internal class CrescentVMTests {
 	@Test
 	fun forLoop1() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.forLoop1))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.forLoop1))
 
 		val firstLoop = (0..9).joinToString("\n")
 
@@ -221,7 +221,7 @@ internal class CrescentVMTests {
 	@Test
 	fun constantsAndObjects() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.constantsAndObject))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.constantsAndObject))
 
 		assertEquals(
 			""" 
@@ -240,7 +240,7 @@ internal class CrescentVMTests {
 	@Test
 	fun struct() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.struct))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.struct))
 
 		assertEquals(
 			""" 
@@ -257,7 +257,7 @@ internal class CrescentVMTests {
 	@Test
 	fun nateTriangle() {
 
-		val file = CrescentParser.invoke(Path("example.crescent"), CrescentLexer.invoke(TestCode.nateTriangle))
+		val file = Parser.invoke(Path("example.crescent"), Lexer.invoke(TestCode.nateTriangle))
 
 		assertEquals(
 			""" 
