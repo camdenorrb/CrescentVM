@@ -18,7 +18,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
 
-    implementation("org.capnproto:runtime:0.1.14")
+    implementation("org.capnproto:runtime:0.1.15")
     implementation("com.guardsquare:proguard-core:9.0.7")
     //implementation("tech.poder.ir:PoderTechIR:+")
     testImplementation(kotlin("test-junit5"))
